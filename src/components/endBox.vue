@@ -121,7 +121,7 @@
     width: 30vw;
     height: 10px;
     display: baseline;
-    justify-items: center;
+    justify-items: center ;
     justify-content: center;
    
 } 

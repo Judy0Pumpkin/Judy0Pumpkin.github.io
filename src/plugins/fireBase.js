@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, doc, setDoc,addDoc, query, where, getDocs,orderBy } from "firebase/firestore";
-import { getAuth,setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth,setPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword,browserLocalPersistence } from "firebase/auth";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -22,6 +22,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+
 
 
 const analytics = getAnalytics(app);
@@ -121,11 +123,12 @@ async function uploadImage(file){
 }
 
 
-  async function getProgressSlider(dateToday, group){
+  async function getProgressSlider( group){
     var slider=[];
+    var max=0;
     console.log("slider");
    try{
-         const q = query(collection(db, "Notebook"), where("date", "==", dateToday),where("group","==",group));
+         const q = query(collection(db, "Notebook"),where("group","==",group));
    
          const querySnapshot = await getDocs(q);
          querySnapshot.forEach((doc) => {
@@ -135,9 +138,13 @@ async function uploadImage(file){
            slider.push(doc.data().slider);
          });
    
-        
+        for(let i=0; i<slider.length;i++){
+          if(slider[i]>max){
+            max=slider[i];
+          }
+        }
          
-         return slider;
+         return max;
      }  
      catch(e){
        console.error("Error finding slider progress: ", e);
@@ -146,6 +153,36 @@ async function uploadImage(file){
    
    }
 
+
+   async function getSlider( group){
+    var slider=[];
+    var max=0;
+    console.log("slider");
+   try{
+          const q = query(
+            collection(db, "Notebook"),
+            where("group", "==", group),
+            orderBy("date") // Order by date in ascending order
+          );
+   
+         const querySnapshot = await getDocs(q);
+         querySnapshot.forEach((doc) => {
+           // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            console.log("slider"+ doc.data().slider);
+           slider.push(doc.data().slider);
+         });
+   
+        max=slider[0];
+         
+         return max;
+     }  
+     catch(e){
+       console.error("Error finding slider progress: ", e);
+     }
+   
+   
+   }
 
 
 
@@ -171,6 +208,40 @@ async function uploadText(group,date,image, member, slider, progress, problem, p
   }
   
 }
+
+
+async function setNewProject(projectName,group_1,group_1_1,group_1_2, group_1_3, group_2, group_2_1, group_2_2, group_2_3,group_3, group_3_1, group_3_2, group_3_3){
+console.log("in the neww project async")
+
+  try {
+    const docRef = await addDoc(collection(db,"UserInformation/"), {
+      user: getAuth().currentUser.uid,
+      projectName: projectName,
+
+      group1: group_1,
+      group_1_1: group_1_1,
+      group_1_2: group_1_2,
+      group_1_3: group_1_3,
+      
+      group_2: group_2,
+      group_2_1: group_2_1, 
+      group_2_2: group_2_2, 
+      group_2_3: group_2_3,
+
+      group_3: group_3,
+      group_3_1: group_3_1, 
+      group_3_2: group_3_2, 
+      group_3_3: group_3_3
+
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+  
+}
+
+
 
 // searching database
 
@@ -212,6 +283,26 @@ try{
 
 }
 
+async function getUserProjects(){
+  var projects=[];
+  
+ try{
+       const q = query(collection(db, "UserInformation"), where("user", "==", getAuth().currentUser.uid));
+       const querySnapshot = await getDocs(q);
+       querySnapshot.forEach((doc) => {
+         // doc.data() is never undefined for query doc snapshots
+         projects.push(doc.data().projectName);
+         console.log(projects);
+       });
+ 
+      
+       
+       return projects;
+   }  
+   catch(e){
+     console.error("Error finding img url: ", e);
+   }}
+
 
 
 self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
@@ -222,11 +313,10 @@ const appCheck = initializeAppCheck(app, {
 });
 
 const auth = getAuth();
-auth.setPersistence(auth.Auth.Persistence.LOCAL)
-        .then(() => auth.signInWithCustomToken(token));
-
-
+(async ()=>await setPersistence(auth, browserLocalPersistence))();
 async function signIn( email, password){
+
+  
 
   return new Promise((resolve, reject)=>{
 
@@ -250,14 +340,15 @@ async function signIn( email, password){
   )
 }
 
-  let userString = auth.currentUser.uid;
-  async function getUserNotes(){
+  // let userString = auth.currentUser.uid;
+  async function getUserNotes(project){
+    console.log(project+"name")
   var userNotes=[];
 
-  console.log(userString+"!!!"+"look here");
-  
+  // console.log(userString+"!!!"+"look here");
+  // "WmS4EGjVqUVJ8AqrxYjBa8ctMaH3"
  try{
-       const q = query(collection(db, "UserInformation"), where("user", "==","WmS4EGjVqUVJ8AqrxYjBa8ctMaH3"));
+       const q = query(collection(db, "UserInformation"), where("user", "==",auth.currentUser.uid),where("projectName","==",project));
 
  
        const querySnapshot = await getDocs(q);
@@ -265,9 +356,11 @@ async function signIn( email, password){
          // doc.data() is never undefined for query doc snapshots
         //  console.log(doc.id, " => ", doc.data());
         //  console.log(doc.data().note1+" "+doc.data().note2+" "+ doc.data().note3);
-         userNotes.push(doc.data().note1);
-         userNotes.push(doc.data().note2);
-         userNotes.push(doc.data().note3);
+         userNotes.push(doc.data().group1);
+         userNotes.push(doc.data().group_2);
+         userNotes.push(doc.data().group_3);
+
+         console.log(userNotes)
        });
  
 
@@ -282,6 +375,6 @@ async function signIn( email, password){
  
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider,getAuth,setNewProject,getUserProjects, getSlider
 }
 

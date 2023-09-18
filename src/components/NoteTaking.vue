@@ -8,11 +8,24 @@
            
           >
               <v-select
+              label="Choose Project"
+              :items= projectItems
+              :rules=required
+              v-model= project
+              required 
+              @update:model-value="projectFunction"
+             
+              ></v-select>
+
+              <v-select
+              
               label="Choose Group"
               :items= items
               :rules=required
               v-model= selected
               required 
+              @update:model-value="updateSLider(selected)"
+               
               ></v-select>
 
 
@@ -71,16 +84,35 @@
       
               
               
-          <div class="text-caption">Show thumb when using slider</div>
-          <v-slider v-model="slider1" thumb-label
+          <div class="text-caption">Degree of Completion</div>
 
-          color= #95b8d1
-          track-color=#eac4d5
-          max-width="290px"
-              min-width="auto"
-              :rules="required"
-        
-          ></v-slider>
+          <div class="shortPage"> 
+
+            <v-slider v-model="slider1" thumb-label
+
+              color= #95b8d1
+              track-color=#eac4d5
+              max-width="290px"
+                  min-width="80w"
+                  :rules="required"
+
+              >
+              <template v-slot:append>
+              <v-text-field
+                v-model="slider1"
+                hide-details
+                single-line
+                density="compact"
+                type="number"
+                style="width: 70px"
+              ></v-text-field>
+            </template>
+            
+            </v-slider>
+
+            
+          </div>
+          
 
           <!-- <h2> Progress</h2> -->
           <v-textarea label="Today's Progress"
@@ -121,7 +153,7 @@
 
 <script>
 
-import { auth, uploadImage } from '@/plugins/fireBase.js';
+import { auth, uploadImage,getUserNotes, getUserProjects,getSlider, getProgressSlider } from '@/plugins/fireBase.js';
 
 import { uploadText } from '@/plugins/fireBase.js';
 import addNewPhoto from '@/assets/addNewPhoto.png'
@@ -136,7 +168,9 @@ import { connectStorageEmulator } from 'firebase/storage';
       dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
       menu1: false,
       menu2: false,
-      items : ['電資', '機構', '策略'],
+      project: "",
+      items : [],
+      projectItems:[],
       selected : "",
         file : [],
         Members: '',
@@ -195,7 +229,23 @@ import { connectStorageEmulator } from 'firebase/storage';
       timeout: null,
       url:'',
     }),
-  
+    
+    created(){
+     
+      
+            
+            getUserProjects().then((projects)=>{
+          
+            for( let i=0; i<projects.length; i++){
+              this.projectItems[i]=(projects[i]);
+              console.log(this.projectItems[i]+"pushed");
+            }
+              
+              console.log("items is "+this.items[0]);
+            })
+                
+
+    },
 
     computed: {
       computedDateFormatted () {
@@ -217,6 +267,32 @@ import { connectStorageEmulator } from 'firebase/storage';
     },
 
     methods: {
+
+      updateSLider(selected){
+        console.log(selected+"slider");
+        getSlider(selected)
+        .then((sliderValue) => {
+          this.slider1 = sliderValue;  // Set the slider value once it's retrieved
+        })
+        .catch((error) => {
+          console.error("Error getting slider value: ", error);
+        });
+        
+      },
+
+      projectFunction(){
+        getUserNotes( this.project).then((noteArr)=>{
+               for(let i=0; i<noteArr.length; i++){
+              if (noteArr[i]!="")
+                this.items[i]=(noteArr[i]);
+               }
+            
+            })
+            .catch((errorMessage)=>{
+                console.log(errorMessage);
+
+            })
+          },
       onImageSelected(file){
         if (file[0]==null){
           this.previewUrl= "";
@@ -275,7 +351,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 
  pressSubmit(){
 
-          if(this.group!=""&& this.dataFormatted!="" && this.Members!="" && this.slider1!=""&& this.progress!=""&& this.progress!=""&& this.plan!=""){
+          if(this.selected!=""&& this.dataFormatted!="" && this.Members!="" && this.slider1!=""&& this.progress!=""&& this.progress!=""&& this.plan!=""){
 
         
 
@@ -372,6 +448,12 @@ width: 100%;
 
 ::v-deep .v-label {
   font-size: 1.2em
+}
+
+.shortPage{
+  display:inline;
+  height:auto;
+  width: inherit
 }
 
 

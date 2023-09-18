@@ -25,7 +25,7 @@
                     
                     </div>
                    
-                    <h2> {{group}}</h2>
+                    <h2 > {{group}} </h2>
                     <v-progress-linear :model-value="sliderProgress" color="blue-grey" height="25" width="50%" @update:model-value="(val)=> $emit('update', val)">
                         <template v-slot:default="{ value }">
                             <strong>{{ Math.ceil(value) }}%</strong>
@@ -82,16 +82,18 @@ import noNotes from '@/assets/noNotes.png'
 
                 })
 
-                getProgressSlider(this.dateFormatted, this.group)
-                    .then((sliderArr)=>{
-                    console.log(sliderArr[0]);
-                    this.sliderProgress=sliderArr[0];
+                getProgressSlider(this.group)
+                    .then((max)=>{
+                    console.log(max);
+                    this.sliderProgress=max;
 
                 } )
                 .catch((e)=>{
                     console.log(e);
 
             })
+
+            
             },
         props:{
             group: String,
@@ -109,10 +111,18 @@ import noNotes from '@/assets/noNotes.png'
         computed:{
 
            
-        
 
         },
+        watch: {
+            group(newValue) {
+            // The 'group' prop has changed, trigger the 'refresh' function.
+            this.refresh();
+            },
+        },
         methods: {
+
+            
+
             formatDate (date) {
                 if (!date) return null
 
@@ -125,6 +135,40 @@ import noNotes from '@/assets/noNotes.png'
                 const [month, day, year] = date.split('/')
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
             },
+            refresh(){
+                getPhotoForPreview(this.dateFormatted, this.group)
+                .then((imgArr)=>{
+                     console.log(this.group);
+                    let realUrl="";
+                console.log(imgArr);
+                    if(imgArr.length==0){
+                        realUrl=  noNotes
+                    }
+                    else if(imgArr[0]=="noImg"){ 
+                        realUrl= noImage;
+                    }
+                    else { realUrl=  imgArr[0];}
+                    console.log(realUrl);
+                    this.img=realUrl;
+                    return realUrl;
+                })
+                .catch((value)=>{
+
+                    console.log("{wrong}");
+
+                })
+
+                getProgressSlider(this.group)
+                    .then((max)=>{
+                    console.log(max);
+                    this.sliderProgress=max;
+
+                } )
+                .catch((e)=>{
+                    console.log(e);
+
+            })
+            }
 
            
         },
@@ -133,7 +177,9 @@ import noNotes from '@/assets/noNotes.png'
 
         components:{
             
+
         },
+      
      
     }
 </script>

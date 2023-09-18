@@ -44,7 +44,7 @@
 
 
 <script>
-import { signIn } from '@/plugins/fireBase';
+import { signIn,auth } from '@/plugins/fireBase';
 
     export default {
         data:()=>({
@@ -113,7 +113,12 @@ import { signIn } from '@/plugins/fireBase';
        
 
         },
-    }
+        mounted(){
+            auth.onAuthStateChanged((user)=>{console.log(user)} )
+    },
+
+}
+       
 </script>
 
 
