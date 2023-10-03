@@ -94,7 +94,12 @@
 
 <style lang="css" scoped>
 
-.item1 { grid-area: header; }
+.item1 { 
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+
+}
 .item2 { grid-area: menu; }
 .item3 { grid-area: main; }
 .item4 { grid-area: footer; }
@@ -102,17 +107,14 @@
     width :100vw;
     height : 300px;
     background-color:#031f5b;
-    display:grid;
-    grid-template-areas:
-    'header'
-    'main'
-    'footer';
+    display:flex;
+
     gap: 10px;
     padding: 10px;
     justify-content:center;
     z-index: 110;
-    justify-self: baseline;
-
+    justify-self: center;
+    position: absolute;
 
 }
  

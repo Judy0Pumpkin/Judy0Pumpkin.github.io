@@ -24,7 +24,19 @@
               :rules=required
               v-model= selected
               required 
-              @update:model-value="updateSLider(selected)"
+              @update:model-value="updateGroupDivision(selected)"
+               
+              ></v-select>
+
+
+              <v-select
+              
+              label="Choose Group Devision"
+              :items= groupDevision
+              :rules=required
+              v-model= chosen
+              required 
+              @update:model-value="updateSLider(chosen)"
                
               ></v-select>
 
@@ -32,7 +44,7 @@
 
 
 
-                            <v-img
+              <v-img
 
               :width="300"
                
@@ -57,19 +69,21 @@
           </h4>
               -->
            
-            
+               <!-- @blur="date = parseDate(dateFormatted)" -->
                   <v-text-field
-                    v-model="dateFormatted"
+                    v-model="date"
                     label="Date"
-                    hint="MM/DD/YYYY format"
+                    hint="YYYY-MM-DD format"
                     persistent-hint
                     prepend-icon="mdi-calendar"
-                    @blur="date = parseDate(dateFormatted)"
+                 
                     :rules="dateRules"
 
                   
                   ></v-text-field>
                
+
+                  
               
                   
 
@@ -153,7 +167,7 @@
 
 <script>
 
-import { auth, uploadImage,getUserNotes, getUserProjects,getSlider, getProgressSlider } from '@/plugins/fireBase.js';
+import { auth, uploadImage,getUserNotes, getUserProjects,getSlider, getProgressSlider,getGroupDivision } from '@/plugins/fireBase.js';
 
 import { uploadText } from '@/plugins/fireBase.js';
 import addNewPhoto from '@/assets/addNewPhoto.png'
@@ -165,13 +179,15 @@ import { connectStorageEmulator } from 'firebase/storage';
   
     data: vm => ({
       date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
+      // dateFormatted: vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
       menu1: false,
       menu2: false,
       project: "",
       items : [],
+      groupDevision:[],
       projectItems:[],
       selected : "",
+      chosen:"",
         file : [],
         Members: '',
         slider1: 0,
@@ -187,9 +203,9 @@ import { connectStorageEmulator } from 'firebase/storage';
         (date) => {
 
           console.log(date);
-          let rule= /\d\d\/\d\d\/\d\d\d\d/;
+          let rule= /\d\d\d\d-\d\d-\d\d/;
           if(!rule.test(date)){
-            return "please follow the MM/DD/YYYY rule";
+            return "please follow the YYYY-MM-DD rule";
 
           }
 
@@ -199,7 +215,7 @@ import { connectStorageEmulator } from 'firebase/storage';
          
 
           (date) => {
-            let [m, d, y] = date.split("/");
+            let [y, m, d] = date.split("-");
             let input = new Date(y, m - 1, d);
             let today = new Date ;
             console.log(input)
@@ -268,6 +284,20 @@ import { connectStorageEmulator } from 'firebase/storage';
 
     methods: {
 
+      updateGroupDivision(selected){
+        getGroupDivision(selected, this.project)
+        .then((arr)=>{
+          for ( let i=0; i< 3; i++){
+            if(arr[i]!=""){
+              this.groupDevision.push( arr[i]);
+            }
+          }
+
+        })
+
+
+      },
+
       updateSLider(selected){
         console.log(selected+"slider");
         getSlider(selected)
@@ -329,7 +359,7 @@ import { connectStorageEmulator } from 'firebase/storage';
                   
                   this.url =downloadURL;
                   console.log("pic");
-                  uploadText(this.selected, this.dateFormatted, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
+                  uploadText(this.project, this.selected, this.date, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool, this.chosen);
                   this.$router.push('/submitted');
                   
 
@@ -362,7 +392,7 @@ import { connectStorageEmulator } from 'firebase/storage';
           }
           else{
             this.imgBool="0";
-            uploadText(this.selected, this.dateFormatted, "noImg", this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool);
+            uploadText(this.project,this.selected, this.date, "noImg", this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool, this.chosen);
                   this.$router.push('/submitted');
                     setTimeout(() => {
                     this.$router.push('/homepage');
@@ -403,7 +433,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 position: relative;
 margin-top: 120px;
 margin-bottom: 100px;
- height: auto;
+ height: 1600px;
  width: 100vw;
  display: flex;
  justify-content: center;

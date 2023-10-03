@@ -1,4 +1,10 @@
 <template>
+
+<head>
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"></link> -->
+
+</head>
+
     <div>
         <div class="pageLogin">
             <div class= "box">
@@ -29,6 +35,7 @@
                             src="@/assets/welcome.png"
 
                             width="20vw"
+                            min-width="220px"
                             cover
                             align-self="center"
                         
@@ -37,13 +44,13 @@
             </div>
        
 
-                
 
     </div>
 </template>
 
 
 <script>
+
 import { signIn,auth } from '@/plugins/fireBase';
 
     export default {
@@ -116,8 +123,8 @@ import { signIn,auth } from '@/plugins/fireBase';
         mounted(){
             auth.onAuthStateChanged((user)=>{console.log(user)} )
     },
-
-}
+    
+    }
        
 </script>
 
@@ -139,6 +146,7 @@ import { signIn,auth } from '@/plugins/fireBase';
     border-style: solid;
   border-color: #92a8d1;
     margin-top: 28vh;
+    min-width: 300px;
 }
  
 .v-img_img{
@@ -158,4 +166,8 @@ import { signIn,auth } from '@/plugins/fireBase';
     display:contents;
 
   }
+
+  /* ///////////// */
+
+ 
 </style>

@@ -8,7 +8,9 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base:'/Unicorn-Notebook',
+ 
+  base: process.env.NODE_ENV === 'production' ? '/Unicorn-Notebook/' : './',
+
   plugins: [
     vue({ 
       template: { transformAssetUrls }

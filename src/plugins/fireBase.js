@@ -186,13 +186,15 @@ async function uploadImage(file){
 
 
 
-async function uploadText(group,date,image, member, slider, progress, problem, plan, imgBool){
+async function uploadText(project, group,date,image, member, slider, progress, problem, plan, imgBool, chosen){
 
 
   try {
     const docRef = await addDoc(collection(db,"Notebook/"), {
       user: getAuth().currentUser.uid,
+      project: project,
       group: group,
+      subGroup :chosen,
       date: date,
       image : image,
       member : member,
@@ -242,8 +244,70 @@ console.log("in the neww project async")
 }
 
 
+//getting data for allNotes
+
+async function getGroupPastNote(project, noteArr){
+  console.log("in the neww project async")
+  // let arr=[];
+  try{
+    noteArr.length=0;
+    const q = query(collection(db, "Notebook"), where("project", "==", project), orderBy("date", "desc"));
+    
+    console.log("enter allNote dunction");
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+       console.log(doc.id, " => ", doc.data());
+       
+       console.log(project);
+      noteArr.push(doc.data())
+    });
+
+   return noteArr;
+    
+  
+    
+    
+}  catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    
+  }
+
+
+  async function getGroupDivisionPastNote(project, Group, noteArr){
+    console.log(project + Group + noteArr)
+    // let arr=[];
+    try{
+      noteArr.length=0;
+      const q = query(collection(db, "Notebook"), where("project", "==", project),where("group","==", Group));
+      
+      console.log("enter allNote dunction");
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+         console.log(doc.id, " => ", doc.data());
+         
+         console.log(project);
+        noteArr.push(doc.data())
+      });
+  
+     return noteArr;
+      
+    
+      
+      
+  }  catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      
+    }
+
+
 
 // searching database
+
+
 
 
 
@@ -305,10 +369,45 @@ async function getUserProjects(){
 
 
 
+   async function getGroupDivision(selectedGroup, project){
+    let groupDivision=[];
+    
+   try{
+         const q = query(collection(db, "UserInformation"), where("user", "==", getAuth().currentUser.uid), where("projectName","==", project));
+         const querySnapshot = await getDocs(q);
+         querySnapshot.forEach((doc) => {
+          if(selectedGroup==doc.data().group1){
+            groupDivision[0]=doc.data().group_1_1;
+            groupDivision[1]=doc.data().group_1_2;
+            groupDivision[2]=doc.data().group_1_3;
+          }
+          else if(selectedGroup==doc.data().group_2){
+            groupDivision[0]=doc.data().group_2_1;
+            groupDivision[1]=doc.data().group_2_2;
+            groupDivision[2]=doc.data().group_2_3;
+          }
+          else if(selectedGroup==doc.data().group_3){
+            groupDivision[0]=doc.data().group_3_1;
+            groupDivision[1]=doc.data().group_3_2;
+            groupDivision[2]=doc.data().group_3_3;
+          }
+           
+           
+         });
+   
+        
+         return groupDivision;
+        
+     }  
+     catch(e){
+       console.error("Error finding img url: ", e);
+     }}
+
+
 self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 
 const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider("6LcoyOcnAAAAANiMF1X-DEM-K_iRTcf21GMwWaJq"),
+  provider: new ReCaptchaEnterpriseProvider("6Le4Jz0oAAAAAPXVUjODLG5JmY0KGHs3KerUwzDC"),
   isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
 });
 
@@ -375,6 +474,6 @@ async function signIn( email, password){
  
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider,getAuth,setNewProject,getUserProjects, getSlider
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider,getAuth,setNewProject,getUserProjects, getSlider,getGroupPastNote,getGroupDivision,getGroupDivisionPastNote
 }
 

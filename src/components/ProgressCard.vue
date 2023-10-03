@@ -60,9 +60,9 @@ import noNotes from '@/assets/noNotes.png'
                     console.log(this.group);
 
 
-                getPhotoForPreview(this.dateFormatted, this.group)
+                getPhotoForPreview(this.date, this.group)
                 .then((imgArr)=>{
-                     console.log(this.group);
+                     console.log(imgArr+"here here");
                     let realUrl="";
                 console.log(imgArr);
                     if(imgArr.length==0){
@@ -103,7 +103,7 @@ import noNotes from '@/assets/noNotes.png'
         },
         data:vm => ({
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-           dateFormatted:vm.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
+          
            img:"",
            sliderProgress:"",
      
@@ -154,7 +154,7 @@ import noNotes from '@/assets/noNotes.png'
                 })
                 .catch((value)=>{
 
-                    console.log("{wrong}");
+                    console.log(value);
 
                 })
 

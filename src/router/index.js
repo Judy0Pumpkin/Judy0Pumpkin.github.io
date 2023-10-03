@@ -1,6 +1,7 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import TakeNote from "@/views/TakeNote"
+import summary from "@/views/AllNotes"
 import setupforanewproject from "@/views/setUpForPro"
 import { auth, getAuth} from '@/plugins/fireBase'
 
@@ -80,6 +81,24 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>import('@/views/projectCreated.vue'),
+
+      },
+      {
+        path: 'summary',
+        name: 'Summary',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component:()=> summary,
+
+      },
+      {
+        path: '1summary',
+        name: 'cool',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>import('@/views/AllNotes.vue'),
 
       }
     ],

@@ -11,11 +11,14 @@
 
       
     </div>
+    <div class="shortPage">
     <h1>{{ project }}</h1>
     <div v-if="items[0] !=''">
+      
         <v-menu  transition="scale-transition">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="white" dark v-bind="props" padding="50px"> {{CurrentNote}} </v-btn>
+               
+                    <v-btn icon color="white"  v-bind="props" density="comfortable" > <v-icon>mdi-menu</v-icon></v-btn>
                 </template>
 
                 <v-list>
@@ -30,10 +33,10 @@
                 </v-list>
                 </v-menu>
                
-
+    </div>
     </div>
     <div id="d1"> </div>
-    <div class="shorterPage">
+    <div class="shorterPage1">
 
       
     </div>
@@ -188,8 +191,19 @@ import { getProgressSlider, getUserNotes,auth,getUserProjects } from '@/plugins/
     height:100px;
     position: relative;
     display:flex;
-    align-content: flex-start;
-    justify-content: center;
+    align-content:flex-start;
+    justify-content: left;
+
+}
+
+.shortPage1{
+   
+   width: 100vw;
+   height:100px;
+   position: relative;
+   display:flex;
+   align-content: flex-start;
+   justify-content: center;
 
 }
 
@@ -198,10 +212,14 @@ import { getProgressSlider, getUserNotes,auth,getUserProjects } from '@/plugins/
    width: 100vw;
    height:50px;
    position: relative;
-   display:flex;
-   align-content: flex-start;
+   display:inline;
+   align-content: left;
    justify-content: center;
 }
+
+v-btn--variant-elevated {
+  box-shadow: hotpink
+  }
 
 
 </style>
