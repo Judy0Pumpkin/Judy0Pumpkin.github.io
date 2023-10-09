@@ -27,8 +27,8 @@
                     
                     :key="index"
                     
-          prepend-avatar="https://static.vecteezy.com/system/resources/previews/020/309/728/original/head-of-cute-rainbow-unicorn-on-pink-circle-with-heart-and-white-background-vector.jpg"
           :title= "item"
+          src='@/assets/logo.png'
           nav
         >
           <template v-slot:append>
@@ -45,15 +45,15 @@
 
         <v-list density="compact" nav>
             <div v-if ="note1 != '' ">
-                <v-list-item prepend-icon="mdi-home-city" :title="note1" :value="note1" @click="subGroupNote(note1)"></v-list-item>
+                <v-list-item prepend-icon="mdi-book-open" :title="note1" :value="note1" @click="subGroupNote(note1)"></v-list-item>
             </div>
 
             <div v-if ="note2 != '' ">
-                <v-list-item prepend-icon="mdi-home-city" :title="note2" :value="note2" @click="subGroupNote(note2)"></v-list-item>
+                <v-list-item prepend-icon="mdi-book-open" :title="note2" :value="note2" @click="subGroupNote(note2)"></v-list-item>
             </div>
 
             <div v-if ="note3 != '' ">
-                <v-list-item prepend-icon="mdi-home-city" :title="note3" :value="note3" @click="subGroupNote(note3)"></v-list-item>
+                <v-list-item prepend-icon="mdi-book-open" :title="note3" :value="note3" @click="subGroupNote(note3)"></v-list-item>
             </div>
             
         </v-list>
@@ -75,6 +75,8 @@
                     <tr>
                         <th>Date</th>
                         <th>Group</th>
+                        <th>Member</th>
+                        <th>Photo</th>
                         <th>Progress</th>
                         <th>Problem</th>
                         <th>Plan</th>
@@ -87,6 +89,13 @@
                 >
                     <td>{{ note.date }}</td>
                     <td>{{ note.group }}</td>
+                    <td>{{ note.member }}</td>
+                    <td><v-img
+                            :width="200"
+                            aspect-ratio="16/9"
+                            cover
+                            :src=note.image
+                            ></v-img></td>
                     <td>{{ note.progress }}</td>
                     <td>{{ note.problem }}</td>
                     <td>{{ note.plan }}</td>
@@ -127,6 +136,7 @@
 
 <script>
 import {getGroupPastNote, auth, getUserNotes, getUserProjects, getGroupDivisionPastNote } from '@/plugins/fireBase';
+
     export default {
       
         data:()=>({
@@ -243,7 +253,8 @@ import {getGroupPastNote, auth, getUserNotes, getUserProjects, getGroupDivisionP
 .page{
     padding-top:120px;
     width: 100vw;
-    height:200vh;
+    min-height: 100vh;
+    height:auto;
     display: flex;
     background-color: white;
     z-index: -2;

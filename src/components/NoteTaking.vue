@@ -33,7 +33,7 @@
               
               label="Choose Group Devision"
               :items= groupDevision
-              :rules=required
+              
               v-model= chosen
               required 
               @update:model-value="updateSLider(chosen)"
@@ -300,7 +300,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 
       updateSLider(selected){
         console.log(selected+"slider");
-        getSlider(selected)
+        getProgressSlider(selected)
         .then((sliderValue) => {
           this.slider1 = sliderValue;  // Set the slider value once it's retrieved
         })

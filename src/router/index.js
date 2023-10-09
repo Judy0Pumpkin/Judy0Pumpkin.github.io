@@ -13,7 +13,7 @@ const routes = [
    // component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-        path: '',
+        path: '/Unicorn-Notebook/',
         name: 'Home',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route

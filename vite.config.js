@@ -10,7 +10,8 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
  
   base: process.env.NODE_ENV === 'production' ? '/Unicorn-Notebook/' : './',
-
+  publicPath: process.env.NODE_ENV === 'production' ? '/Unicorn-Notebook/' : '/',
+//up added
   plugins: [
     vue({ 
       template: { transformAssetUrls }

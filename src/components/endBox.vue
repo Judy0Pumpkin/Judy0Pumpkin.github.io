@@ -52,12 +52,7 @@
 
 
         <div class="item3">
-        <v-img
-                contain
-                max-height="200"
-                min-height="100"
-                src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQAo3YkJF6ONaJRnehNqJIPWg9GURvjhKhlYtseuUSrwZMjvdZvt7l_F1GpJiT6gm0wvILiYSGg5n-5CMc"
-            ></v-img>
+       
 
          
         </div>
@@ -108,9 +103,10 @@
     height : 300px;
     background-color:#031f5b;
     display:flex;
+    
 
     gap: 10px;
-    padding: 10px;
+    padding-top: 150px;
     justify-content:center;
     z-index: 110;
     justify-self: center;

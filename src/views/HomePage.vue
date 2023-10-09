@@ -13,6 +13,7 @@
     </div>
     <div class="shortPage">
     <h1>{{ project }}</h1>
+    
     <div v-if="items[0] !=''">
       
         <v-menu  transition="scale-transition">
@@ -51,6 +52,7 @@
           @group="(gr)=>note1= gr"
           :progress= "progress"
           @update="(val)=>progress= val"
+          :project="project"
           
         >
         </ProgressCard>
@@ -60,7 +62,8 @@
         <ProgressCard
           :group= "note2"
           :progress= "progress"
-          @update="(val)=>progress= val">
+          @update="(val)=>progress= val"
+          :project="project">
         </ProgressCard>
       </div>
 
@@ -69,7 +72,8 @@
         <ProgressCard
           :group= "note3"
           :progress= "progress"
-          @update="(val)=>progress= val">
+          @update="(val)=>progress= val"
+          :project="project">
         
         </ProgressCard>
       </div>
@@ -108,6 +112,9 @@ import { getProgressSlider, getUserNotes,auth,getUserProjects } from '@/plugins/
             onClick(item){
               this.project=item;
               getUserNotes(item).then((noteArr)=>{
+                this.note1=" ";
+                this.note2=" ";
+                this.note3=" ";
                 this.note1=noteArr[0];
                 this.note2=noteArr[1];
                 this.note3=noteArr[2];

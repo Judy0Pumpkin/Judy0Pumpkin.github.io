@@ -63,7 +63,7 @@
 
 <style lang="scss" scoped>
 .headerBox{
-    position:absolute;
+    position:fixed;
     width :100vw;
     height : 80px;
     background-color:#031f5b;

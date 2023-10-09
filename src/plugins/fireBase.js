@@ -123,28 +123,22 @@ async function uploadImage(file){
 }
 
 
-  async function getProgressSlider( group){
+  async function getProgressSlider( group, project){
     var slider=[];
     var max=0;
-    console.log("slider");
    try{
-         const q = query(collection(db, "Notebook"),where("group","==",group));
+         const q = query(collection(db, "Notebook"),where("group","==",group), where("user", "==", auth.currentUser.uid), where( "project", "==", project), orderBy("date", "desc"));
    
          const querySnapshot = await getDocs(q);
          querySnapshot.forEach((doc) => {
            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-            console.log("slider"+ doc.data().slider);
+           
            slider.push(doc.data().slider);
          });
    
-        for(let i=0; i<slider.length;i++){
-          if(slider[i]>max){
-            max=slider[i];
-          }
-        }
+        
          
-         return max;
+         return slider[0];
      }  
      catch(e){
        console.error("Error finding slider progress: ", e);
@@ -157,7 +151,6 @@ async function uploadImage(file){
    async function getSlider( group){
     var slider=[];
     var max=0;
-    console.log("slider");
    try{
           const q = query(
             collection(db, "Notebook"),
@@ -168,8 +161,7 @@ async function uploadImage(file){
          const querySnapshot = await getDocs(q);
          querySnapshot.forEach((doc) => {
            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
-            console.log("slider"+ doc.data().slider);
+            
            slider.push(doc.data().slider);
          });
    
@@ -213,7 +205,7 @@ async function uploadText(project, group,date,image, member, slider, progress, p
 
 
 async function setNewProject(projectName,group_1,group_1_1,group_1_2, group_1_3, group_2, group_2_1, group_2_2, group_2_3,group_3, group_3_1, group_3_2, group_3_3){
-console.log("in the neww project async")
+
 
   try {
     const docRef = await addDoc(collection(db,"UserInformation/"), {
@@ -247,19 +239,15 @@ console.log("in the neww project async")
 //getting data for allNotes
 
 async function getGroupPastNote(project, noteArr){
-  console.log("in the neww project async")
   // let arr=[];
   try{
     noteArr.length=0;
-    const q = query(collection(db, "Notebook"), where("project", "==", project), orderBy("date", "desc"));
+    const q = query(collection(db, "Notebook"), where ("user", "==", auth.currentUser.uid),where("project", "==", project), orderBy("date", "desc"));
     
-    console.log("enter allNote dunction");
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-       console.log(doc.id, " => ", doc.data());
-       
-       console.log(project);
+   
       noteArr.push(doc.data())
     });
 
@@ -276,19 +264,15 @@ async function getGroupPastNote(project, noteArr){
 
 
   async function getGroupDivisionPastNote(project, Group, noteArr){
-    console.log(project + Group + noteArr)
     // let arr=[];
     try{
       noteArr.length=0;
-      const q = query(collection(db, "Notebook"), where("project", "==", project),where("group","==", Group));
+      const q = query(collection(db, "Notebook"),where("user","==", auth.currentUser.uid), where("project", "==", project),where("group","==", Group));
       
       console.log("enter allNote dunction");
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-         console.log(doc.id, " => ", doc.data());
-         
-         console.log(project);
         noteArr.push(doc.data())
       });
   
@@ -312,19 +296,21 @@ async function getGroupPastNote(project, noteArr){
 
 
 
-async function getPhotoForPreview(dateToday, group){
+async function getPhotoForPreview(dateToday, group, project){
  var imgUrl=[];
  
 try{
-      const q = query(collection(db, "Notebook"), where("date", "==", dateToday),where("imgBool","==","1"),where("group","==",group));
-      const q2 = query(collection(db, "Notebook"), where("date", "==", dateToday),where("imgBool","==","0"),where("group","==",group));
+      const q = query(collection(db, "Notebook"), where("user", "==",auth.currentUser.uid),where("project","==",project), where("date", "==", dateToday),where("imgBool","==","1"),where("group","==",group));
+      const q2 = query(collection(db, "Notebook"),where("user", "==",auth.currentUser.uid), where("date", "==", dateToday),where("imgBool","==","0"),where("group","==",group) ,where("project","==",project));
+
+      console.log ("get photo for preview" + auth.currentUser.uid + " " + project + " "+ group + " " + dateToday )
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-         console.log(doc.id, " => ", doc.data());
-         console.log(doc.data().image);
-         console.log(group);
+        console.log("first layer check"+group)
+       
+        
         imgUrl.push(doc.data().image);
       });
 
@@ -356,7 +342,7 @@ async function getUserProjects(){
        querySnapshot.forEach((doc) => {
          // doc.data() is never undefined for query doc snapshots
          projects.push(doc.data().projectName);
-         console.log(projects);
+         
        });
  
       
@@ -403,11 +389,13 @@ async function getUserProjects(){
        console.error("Error finding img url: ", e);
      }}
 
+     if (location.hostname === 'localhost') self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+     else self.FIREBASE_APPCHECK_DEBUG_TOKEN = process.env.APP_CHECK_DEBUG_TOKEN_FROM_CI;
 
-self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+// self.FIREBASE_APPCHECK_DEBUG_TOKEN = "6LcRU3EoAAAAAEHTDJCTd_XHk0DOyqg_pev7C7BI";
 
 const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider("6Le4Jz0oAAAAAPXVUjODLG5JmY0KGHs3KerUwzDC"),
+  provider: new ReCaptchaEnterpriseProvider("6LcRU3EoAAAAAEHTDJCTd_XHk0DOyqg_pev7C7BI"),
   isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
 });
 
@@ -441,7 +429,7 @@ async function signIn( email, password){
 
   // let userString = auth.currentUser.uid;
   async function getUserNotes(project){
-    console.log(project+"name")
+    
   var userNotes=[];
 
   // console.log(userString+"!!!"+"look here");
@@ -459,7 +447,7 @@ async function signIn( email, password){
          userNotes.push(doc.data().group_2);
          userNotes.push(doc.data().group_3);
 
-         console.log(userNotes)
+        
        });
  
 

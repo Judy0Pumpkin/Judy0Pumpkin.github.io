@@ -53,18 +53,15 @@ import noNotes from '@/assets/noNotes.png'
 
         created() { 
          
-                console.log(this.group);
+                
 
                     
                     this.$emit("group", this.group);
-                    console.log(this.group);
+                
 
-
-                getPhotoForPreview(this.date, this.group)
+                getPhotoForPreview(this.date, this.group, this.project)
                 .then((imgArr)=>{
-                     console.log(imgArr+"here here");
                     let realUrl="";
-                console.log(imgArr);
                     if(imgArr.length==0){
                         realUrl=  noNotes
                     }
@@ -72,19 +69,17 @@ import noNotes from '@/assets/noNotes.png'
                         realUrl= noImage;
                     }
                     else { realUrl=  imgArr[0];}
-                    console.log(realUrl);
                     this.img=realUrl;
                     return realUrl;
                 })
                 .catch((value)=>{
 
-                    console.log("{wrong}");
+                    console.log(value);
 
                 })
 
-                getProgressSlider(this.group)
+                getProgressSlider(this.group, this.project)
                     .then((max)=>{
-                    console.log(max);
                     this.sliderProgress=max;
 
                 } )
@@ -99,6 +94,7 @@ import noNotes from '@/assets/noNotes.png'
             group: String,
             progress: Number,
             imageSrc: String,
+            project: String,
 
         },
         data:vm => ({
@@ -118,6 +114,12 @@ import noNotes from '@/assets/noNotes.png'
             // The 'group' prop has changed, trigger the 'refresh' function.
             this.refresh();
             },
+
+            project(newValue) {
+            // The 'group' prop has changed, trigger the 'refresh' function.
+           
+            // this.refresh();
+            },
         },
         methods: {
 
@@ -136,20 +138,23 @@ import noNotes from '@/assets/noNotes.png'
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
             },
             refresh(){
-                getPhotoForPreview(this.dateFormatted, this.group)
+
+
+                getPhotoForPreview(this.date, this.group, this.project)
                 .then((imgArr)=>{
-                     console.log(this.group);
+                    console.log("refreshed 2 url"+this.project+ this.group +imgArr[0]+imgArr[1]);
                     let realUrl="";
-                console.log(imgArr);
                     if(imgArr.length==0){
-                        realUrl=  noNotes
+                        realUrl=  noNotes;
                     }
                     else if(imgArr[0]=="noImg"){ 
                         realUrl= noImage;
                     }
                     else { realUrl=  imgArr[0];}
-                    console.log(realUrl);
+
                     this.img=realUrl;
+
+                    console.log(realUrl);
                     return realUrl;
                 })
                 .catch((value)=>{
@@ -157,10 +162,10 @@ import noNotes from '@/assets/noNotes.png'
                     console.log(value);
 
                 })
+                
 
-                getProgressSlider(this.group)
+                getProgressSlider(this.group, this.project)
                     .then((max)=>{
-                    console.log(max);
                     this.sliderProgress=max;
 
                 } )
@@ -168,7 +173,7 @@ import noNotes from '@/assets/noNotes.png'
                     console.log(e);
 
             })
-            }
+            },
 
            
         },
