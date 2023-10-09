@@ -106,8 +106,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  // history: createWebHistory(process.env.NODE_ENV==='production'?'Unicorn-Notebook':"/"),
+  // history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.NODE_ENV==='production'?'Unicorn-Notebook':""),
   routes,
 });
 
