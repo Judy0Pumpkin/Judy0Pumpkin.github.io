@@ -359,7 +359,7 @@ import { connectStorageEmulator } from 'firebase/storage';
                   
                   this.url =downloadURL;
                   console.log("pic");
-                  uploadText(this.project, this.selected, this.date, this.url, this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool, this.chosen);
+                  uploadText(this.project, this.selected, this.date, this.url, this.Members, this.slider1, this.progress, this.problem, this.plan, this.imgBool, this.chosen);
                   this.$router.push('/submitted');
                   
 
@@ -381,7 +381,7 @@ import { connectStorageEmulator } from 'firebase/storage';
 
  pressSubmit(){
 
-          if(this.selected!=""&& this.dataFormatted!="" && this.Members!="" && this.slider1!=""&& this.progress!=""&& this.progress!=""&& this.plan!=""){
+          if(this.selected!=""&& this.dataFormatted!="" && this.Members!="" && this.slider1!=""&& this.progress!=""&& this.problem!=""&& this.plan!=""){
 
         
 
@@ -392,7 +392,7 @@ import { connectStorageEmulator } from 'firebase/storage';
           }
           else{
             this.imgBool="0";
-            uploadText(this.project,this.selected, this.date, "noImg", this.Members, this.slider1, this.progress, this.progress, this.plan, this.imgBool, this.chosen);
+            uploadText(this.project,this.selected, this.date, "noImg", this.Members, this.slider1, this.progress, this.problem, this.plan, this.imgBool, this.chosen);
                   this.$router.push('/submitted');
                     setTimeout(() => {
                     this.$router.push('/homepage');
