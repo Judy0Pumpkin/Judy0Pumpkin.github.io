@@ -13,7 +13,7 @@ const routes = [
    // component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-        path: '/Unicorn-Notebook/',
+        path: "",
         name: 'Home',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -28,14 +28,14 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/HomePage.vue'),
 
-      },
+     },
       {
         path: 'takenote',
         name: 'TakeNote',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => TakeNote,
+        component:  TakeNote,
         
       },
       {
@@ -71,7 +71,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => setupforanewproject,
+        component:  setupforanewproject,
 
       },
       {
@@ -80,7 +80,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () =>import('@/views/projectCreated.vue'),
+        component: () => import('@/views/projectCreated.vue'),
 
       },
       {
@@ -89,7 +89,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component:()=> summary,
+        component: summary,
 
       },
       {

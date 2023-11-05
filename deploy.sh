@@ -4,6 +4,8 @@ npm run build
 # going to dist
 cd ./dist
 
+copy index.html 404.html
+
 # init
 git init
 git add .

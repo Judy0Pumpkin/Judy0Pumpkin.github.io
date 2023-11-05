@@ -109,6 +109,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Group Devision</th>
+                        <th>Photo</th>
                         <th>Progress</th>
                         <th>Problem</th>
                         <th>Plan</th>
@@ -121,6 +122,12 @@
                 >
                     <td>{{ note.date }}</td>
                     <td>{{ note.subGroup }}</td>
+                    <td><v-img
+                            :width="200"
+                            aspect-ratio="16/9"
+                            cover
+                            :src=note.image
+                            ></v-img></td>
                     <td>{{ note.progress }}</td>
                     <td>{{ note.problem }}</td>
                     <td>{{ note.plan }}</td>
