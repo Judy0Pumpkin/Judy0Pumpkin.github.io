@@ -1,4 +1,5 @@
 // Import the functions you need from the SDKs you need
+//import firebase from 'firebase/compat/app';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, doc, setDoc,addDoc, query, where, getDocs,orderBy } from "firebase/firestore";
@@ -51,6 +52,25 @@ const storage = getStorage();
 const metadata = {
   contentType: 'image/jpeg'
 };
+
+
+//create account
+async function createAccount(email, password){
+ createUserWithEmailAndPassword( auth,email, password)
+  .then((userCredential) => {
+    //Signed up 
+    const user = userCredential.user;
+    console.log("create succesfully");
+    //...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    //..
+  });
+}
+
+
 
 // Upload file and metadata to the object 'images/mountains.jpg'
 
@@ -462,6 +482,9 @@ async function signIn( email, password){
  
 
 export {
-  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider,getAuth,setNewProject,getUserProjects, getSlider,getGroupPastNote,getGroupDivision,getGroupDivisionPastNote
+  uploadImage, getDownloadURL, uploadText, signIn, auth, getPhotoForPreview,getUserNotes, getProgressSlider,getAuth,setNewProject,getUserProjects, getSlider,getGroupPastNote,getGroupDivision,getGroupDivisionPastNote,createAccount
 }
+
+
+
 

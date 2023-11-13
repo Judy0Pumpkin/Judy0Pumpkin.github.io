@@ -26,7 +26,8 @@
                         type="password"
                     ></v-text-field>
                 <v-btn block class="mt-2" type="submit">Login</v-btn>
-                <v-btn  block class="mt-2">Create Account</v-btn>
+                <v-btn  block class="mt-2"
+                @click=createAccount()>Create Account</v-btn>
                 </v-form>
                 
             </div>
@@ -51,7 +52,7 @@
 
 <script>
 
-import { signIn,auth } from '@/plugins/fireBase';
+import { signIn,auth, createAccount } from '@/plugins/fireBase';
 
     export default {
         data:()=>({
@@ -69,6 +70,8 @@ import { signIn,auth } from '@/plugins/fireBase';
 
           return 'E-mail must be valid.'
         },]
+
+   
 
         }),
 
@@ -112,12 +115,62 @@ import { signIn,auth } from '@/plugins/fireBase';
                     console.log(errorMessage);
 
                 });
+                
 
-
-
+               
 
 },
-       
+
+                async createAccount(){
+                    var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+                    if (!this.password.length >= 8) {
+                        
+                        alert('Password should have more than 8 characters.');
+      
+                    }
+                    else if(this.password==0) {
+                        alert( 'This field is required.');
+                    }
+                    else if(!regularExpression.test(this.password)) {
+                        alert( "password should contain atleast one number and one special character");
+                    }
+
+                    else{
+                    createAccount(this.userName, this.password)
+                    .then(()=>{
+                        console.log(this.userName);
+                        console.log(this.password);
+                    })
+                    .catch((e)=>{
+                        console.log(e);
+                    });
+                }
+
+                },
+
+
+    required: function(value) {
+      if (value) {
+        return true;
+      } else {
+        return 'This field is required.';
+      }
+    },
+    min6: function(value) {
+      if (value.length >= 8) {
+        return true;
+      } else {
+        return 'Password should have more than 8 characters.';
+      }
+    },
+    special: function(value){
+        var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+        if(!regularExpression.test(value)) {
+         return "password should contain atleast one number and one special character";
+        }
+    }
+
+
 
         },
         mounted(){
